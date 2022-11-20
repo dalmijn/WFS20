@@ -35,10 +35,10 @@ setup(
 	'Source': 'https://github.com/B-Dalmijn/WFS20',
 	'Tracker': 'https://github.com/B-Dalmijn/WFS20/issues',
 	},
-	packages=find_packages(),
+	package_dir={"":"src"},
+	packages=find_packages(where="src"),
 	install_requires=[
 	"lxml"
 	],
 	python_requires='>=3.6',
-
 	)
