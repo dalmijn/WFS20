@@ -22,7 +22,7 @@ https://github.com/B-Dalmijn/WFS20
 The package can be installed from:
 
 ```sh
-# Pypi
+# PyPI
 pip install wfs20
 ```
 
@@ -36,7 +36,7 @@ These packages improve the functionality and speed of the wfs20 package, but are
 These are to be installed from:
 
 ## License
-[BSD 3](LICENSE)
+[BSD 3](LICENSE.txt)
 
 ## Questions/ reported bugs?
 Send an email to brencodeert@outlook.com

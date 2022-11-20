@@ -1,10 +1,19 @@
 .idea
 *.png
+
 # Byte-compiled / optimized / DLL files
-*.egg-info/
 __pycache__/
 */__pycache__/
 *.py[cod]
 *.pyc
+
+# Linking files
+*.egg-info/
+
 # Temperary files
 tmp/
+
+# Files from building
+build/
+dist/
+
