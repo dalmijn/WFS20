@@ -139,7 +139,9 @@ class FeatureTypeMeta:
 			[item.text for item in elem.findall(_ElementKey(WFS_NAMESPACE, "OutputFormats/Format"))]
 			)
 		# Metadata URL
-		self.MetaDataURL = elem.find(_ElementKey(WFS_NAMESPACE, "MetadataURL")).attrib["{http://www.w3.org/1999/xlink}href"]
+		self.MetaDataURLs = []
+		for url in elem.findall(_ElementKey(WFS_NAMESPACE, "MetadataURL")):
+			self.MetaDataURLs.append(url.attrib["{http://www.w3.org/1999/xlink}href"])
 
 class Feature:
 	"""

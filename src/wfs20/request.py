@@ -2,6 +2,7 @@ from wfs20.error import WFSError
 
 import sys
 import requests
+from lxml import etree
 from urllib.parse import parse_qsl, urlencode
 
 def _BaseRequestURL(url):
@@ -55,7 +56,7 @@ def GetResponse(url,timeout):
 
 	if "Content-Type" in r.headers and \
 			r.headers['Content-Type'] in ['text/xml', 'application/xml', 'application/vnd.ogc.se_xml']:
-		wfse = etree(r.content)
+		wfse = etree.fromstring(r.content)
 		exceptions = [
             '{http://www.opengis.net/ows}Exception',
             '{http://www.opengis.net/ows/1.1}Exception',
