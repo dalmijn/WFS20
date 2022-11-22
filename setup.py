@@ -1,9 +1,16 @@
 from setuptools import setup, find_packages
+import pathlib
+
+here = pathlib.Path(__file__).parent.resolve()
+
+long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
 	name="wfs20",
-	version=f"0.1.0",
+	version="0.1.0",
 	description="Small library to request geospatial data (WFS)",
+	long_description=long_description,
+	long_description_content_type="text/markdown",
 	url="https://github.com/B-Dalmijn/WFS20",
 	author="Brendan Wybo Dalmijn",
 	author_email="brencodeert@outlook.com",
