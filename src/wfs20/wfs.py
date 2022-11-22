@@ -90,13 +90,23 @@ class WebFeatureService:
 		format="shp"
 		):
 		"""
+		Write geospatial data held in reader to file
+
+		Parameters
+		----------
+		out: str
+			path of where the file should be written to
+		format: str
+			format of the file, following options are available:
+				- gml
+				- shp
 		"""
 		if self.DataReader == None or not self.DataReader.Features:
 			raise WFSInternalError("Writing to file","No features collected from WebFeatureService")
 		if format == "shp":
 			_WriteShapeFile(self.DataReader,out)
 		elif format == "gml":
-			_WriteToGML()
+			_WriteToGML(self.DataReader,out)
 		else:
 			raise ValueError(f"Incorrect format => {format}")
 
