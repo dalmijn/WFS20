@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name="wfs20",
-	version=f"0.1.0a1",
+	version=f"0.1.0",
 	description="Small library to request geospatial data (WFS)",
 	url="https://github.com/B-Dalmijn/WFS20",
 	author="Brendan Wybo Dalmijn",

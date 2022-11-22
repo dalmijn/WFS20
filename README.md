@@ -10,7 +10,11 @@ for now. wfs20 will be expanded in the future to also contain the
 ## What can it do?
 Some of its functionality is listed below:
 
-  - 
+  - Get the capabilities and metadata of/from the service
+    ```sh
+    from wfs20 import WebFeatureService
+    wfs = WebFeatureService(url)
+    ```
   -
   -
   -
@@ -29,7 +33,7 @@ pip install wfs20
 ## Dependencies
   - [lxml: Parse xml-data returned by the service, whether it be the service itself or the requested data]
 
-## Optional
+## Additional packages
 These packages improve the functionality and speed of the wfs20 package, but are not required
   - [osgeo (ogr & osr): ]
 
@@ -39,10 +43,11 @@ These are to be installed from:
 # Conda
 conda install gdal
 ```
+Or from a wheel file; Found on the now archived database of Christoph Gohlke: 
+https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
 ```
-# Or from .whl; Found on the now archived database of Christoph Gohlke: 
-# https://www.lfd.uci.edu/~gohlke/pythonlibs/
+# .whl
 pip install gdal-xxx.whl
 ```
 
