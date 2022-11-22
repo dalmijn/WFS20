@@ -10,7 +10,16 @@ def _ServiceReader(url,timeout):
 
 class DataReader:
 	"""
-	Response Reader
+	Response reader of a geospatial data request
+
+	Parameters
+	----------
+	url: str
+		request url for geospatial data
+
+	Returns
+	-------
+	Reader object
 	"""
 	def __init__(
 		self,

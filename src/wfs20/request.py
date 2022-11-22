@@ -30,6 +30,18 @@ def _ServiceURL(url,version):
 
 def GetResponse(url,timeout):
 	"""
+	Get the response from a url to be requested
+
+	Parameters
+	----------
+	url: str
+		url to be requested
+	timeout: int
+		Allowed timeout after which an Exception is raised
+
+	Returns
+	-------
+	Response
 	"""
 	params = {}
 	params["timeout"] = timeout
@@ -60,6 +72,12 @@ def GetResponse(url,timeout):
 
 def BBOXGet(bbox,crs):
 	"""
+	Translate a list or tuple of coordinates to request material
+
+	Parameters
+	----------
+	bbox: list of tuple
+	crs: wfs20.crs.CRS
 	"""
 	if crs.encoding == "urn":
 		if crs.order == "xy":
@@ -90,6 +108,28 @@ def CreateGetRequest(
 	startindex=None
 	):
 	"""
+	Create a geospatial data request-url
+
+	Parameters
+	----------
+	url: str
+		Service url
+	version: str
+		Service version
+	featuretype: str
+		Layer to be requested, mostly in the format of 'xxx:xxx'
+	bbox: list or tuple
+		Bounding box wherein the spatial data lies that is requested,
+		e.g. (x1,y1,x2,y2)
+	crs: wfs20.crs.CRS
+		Object containing projection information
+	startindex: int
+		Starting index of the feature count
+
+	Returns
+	-------
+	url: str
+		request url
 	"""
 	base,_ = _BaseRequestURL(url)
 	params = {
@@ -103,6 +143,9 @@ def CreateGetRequest(
 	p = urlencode(params,doseq=True)
 	return f"{base}?{p}"
 
+# ToDo: Fix post requests for this library
 def CreatePostRequest():
-	pass
+	"""
+	"""
+	return "This now does nothing, thanks for trying out"
 

@@ -58,7 +58,10 @@ class CRS:
 	----------
 	crs: str
 		crs in urn format or uri format
-
+	
+	Returns
+	-------
+	CRS object
 	"""
 	def __init__(self,crs):
 		self.crs = crs
