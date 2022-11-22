@@ -12,6 +12,7 @@ XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance'
 
 def _BuildServiceMeta(wfs,r):
 	"""
+	Method to build the metadata etc. of the service itself
 	"""
 	t = etree.fromstring(r.content)
 	# Some indentifiers
@@ -21,7 +22,7 @@ def _BuildServiceMeta(wfs,r):
 	# Featuretypes (Layers) and Featuretype Meta
 	wfs.FeatureTypeMeta = {}
 	for elem in t.findall(_ElementKey(WFS_NAMESPACE, "FeatureTypeList/FeatureType")):
-		tnm = FeatureTypeMeta(elem, None)
+		tnm = FeatureTypeMeta(elem)
 		wfs.FeatureTypeMeta[tnm.FeatureType] = tnm
 	wfs.FeatureTypes = tuple(
 		wfs.FeatureTypeMeta.keys()
@@ -44,6 +45,7 @@ def _BuildServiceMeta(wfs,r):
 
 def _BuildResonseMeta(reader, r, keyword):
 	"""
+	Method to build the metadata etc. of the geospatial data request
 	"""
 	t = etree.fromstring(r.content)
 	# Generate Local NameSpace
@@ -72,6 +74,7 @@ def _GetLocalNS(nsmap):
 
 def _ElementKey(ns,sub):
 	"""
+	Return key in xml format
 	"""
 	def ns_string(ns,s):
 		return f"{{{ns}}}{s}"
@@ -96,7 +99,20 @@ def _IsFieldType(lst):
 	return type
 
 class FeatureTypeMeta:
-	def __init__(self,elem,parent):
+	"""
+	Create metadata of a featuretype
+
+	Parameters
+	----------
+	elem: lxml.etree._Element
+		Data corresponding to the featuretype in xml format
+		parsed by lxml.etree
+
+	Returns
+	-------
+	FeatureType metadata object
+	"""
+	def __init__(self,elem):
 		# Identifiers
 		self.FeatureType = elem.find(_ElementKey(WFS_NAMESPACE, "Name")).text
 		self.Title = elem.find(_ElementKey(WFS_NAMESPACE, "Title")).text
@@ -126,6 +142,19 @@ class FeatureTypeMeta:
 		self.MetaDataURL = elem.find(_ElementKey(WFS_NAMESPACE, "MetadataURL")).attrib["{http://www.w3.org/1999/xlink}href"]
 
 class Feature:
+	"""
+	Holds data of individual features returned by the request
+	for geospatial data
+
+	Parameters
+	----------
+	elem: lxml.etree._Element
+		Data corresponding to the feature
+
+	Returns
+	-------
+	Feature Object
+	"""
 	def __init__(self,elem):
 		self.Fields = {}
 		for e in elem.findall(_ElementKey(LOC_NAMESPACE, "*")):
@@ -145,7 +174,7 @@ class LayerMeta:
 	Parameters
 	----------
 	t: lxml.etree._Element
-		gml data parsed by lml.etree
+		gml data parsed by lxml.etree
 	keyword: str
 		string associated with feature dependent values
 	"""
