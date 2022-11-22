@@ -1,4 +1,4 @@
-# wfs20: Small library for requesting spatial data (WFS)
+# wfs20: Small library for requesting geospatial data (WFS)
 
 ## What is it?
 wfs20 is a small library with the sole purpose of making it easy
@@ -20,8 +20,9 @@ Some of its functionality is listed below:
   - Request geospatial data from the service
 
     ```sh
-    reader = wfs.RequestData("<layer>",(x1,y1,x2,y2),28992)
-    # 28992 is the proj_code to be filled in
+    reader = wfs.RequestData("<layer>",(x1,y1,x2,y2),proj_code)
+    # proj_code is the projection code corresponding with the geospatial data
+    # to be requested and the given bbox (x1,y1,x2,y2)
     ```
 
     The returned reader object holds the geospatial data and 
@@ -46,15 +47,18 @@ Some of its functionality is listed below:
     E.g.
 
     ```sh
+    from wfs20.crs import CRS
     from wfs20.reader import DataReader
     from wfs20.request import CreateGetRequest
+
+    crs = CRS.from_epsg(<epsg>)
 
     url = CreateGetRequest(
       service_url,
       version
       featuretype
       bbox,
-      epsg
+      crs
       )
 
     reader = DataReader(<url>)
