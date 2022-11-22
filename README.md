@@ -11,13 +11,56 @@ for now. wfs20 will be expanded in the future to also contain the
 Some of its functionality is listed below:
 
   - Get the capabilities and metadata of/from the service
+
     ```sh
     from wfs20 import WebFeatureService
-    wfs = WebFeatureService(url)
+    wfs = WebFeatureService(<url>)
     ```
-  -
-  -
-  -
+
+  - Request geospatial data from the service
+
+    ```sh
+    reader = wfs.RequestData("<layer>",(x1,y1,x2,y2),28992)
+    # 28992 is the proj_code to be filled in
+    ```
+
+    The returned reader object holds the geospatial data and 
+    subsequent metadata
+
+  - Export the requested data to the harddrive, as long as there is 
+    data in the reader object
+
+    ```sh
+    # to gml
+    wfs.ToFile("<folder>",format="gml")
+    ```
+
+    ```sh
+    # to ESRI ShapeFile
+    wfs.ToFile("<folder>",format="shp")
+    ```
+
+  - It is completely modular, so if you know the capabilities of the service,
+    you don't really need to use the WebFeatureService class
+
+    E.g.
+
+    ```sh
+    from wfs20.reader import DataReader
+    from wfs20.request import CreateGetRequest
+
+    url = CreateGetRequest(
+      service_url,
+      version
+      featuretype
+      bbox,
+      epsg
+      )
+
+    reader = DataReader(<url>)
+    ```
+
+    Where again you have a reader object holding the geospatial data
 
 ## Where to get it?
 Source code is available at this repository on Github:
@@ -35,7 +78,7 @@ pip install wfs20
 
 ## Additional packages
 These packages improve the functionality and speed of the wfs20 package, but are not required
-  - [osgeo (ogr & osr): ]
+  - [osgeo (ogr & osr): Geospatial library written in c++]
 
 These are to be installed from:
 
@@ -43,6 +86,7 @@ These are to be installed from:
 # Conda
 conda install gdal
 ```
+
 Or from a wheel file; Found on the now archived database of Christoph Gohlke: 
 https://www.lfd.uci.edu/~gohlke/pythonlibs/
 
