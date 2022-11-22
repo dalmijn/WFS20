@@ -7,6 +7,17 @@ wfs20 only caters to the 2.0.0 version of the WebFeatureService
 for now. wfs20 will be expanded in the future to also contain the
 1.0.0 and 1.1.0 version of the WebFeatureService.
 
+## Where to get it?
+Source code is available at this repository on Github:
+https://github.com/B-Dalmijn/WFS20
+
+The package can be installed from:
+
+```sh
+# PyPI
+pip install wfs20
+```
+
 ## What can it do?
 Some of its functionality is listed below:
 
@@ -65,17 +76,6 @@ Some of its functionality is listed below:
     ```
 
     Where again you have a reader object holding the geospatial data
-
-## Where to get it?
-Source code is available at this repository on Github:
-https://github.com/B-Dalmijn/WFS20
-
-The package can be installed from:
-
-```sh
-# PyPI
-pip install wfs20
-```
 
 ## Dependencies
   - [lxml: Parse xml-data returned by the service, whether it be the service itself or the requested data]
