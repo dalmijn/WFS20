@@ -22,6 +22,3 @@ class AUTHError(Exception):
 		super(AUTHError,self).__init__(self.base)
 	def __str__(self):
 		return f"{self.base} => {self.msg}"
-
-if __name__ == "__main__":
-	raise AUTHError("bla")
