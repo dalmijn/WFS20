@@ -20,7 +20,7 @@ def _ServiceURL(url,version):
 	base,par = _BaseRequestURL(url)
 	key = [item[0] for item in par]
 	if "service" not in key:
-		par += [("service",WFS)]
+		par += [("service","WFS")]
 	if "request" not in key:
 		par += [("request","GetCapabilities")]
 	if "version" not in key:
