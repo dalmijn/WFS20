@@ -55,8 +55,8 @@ Some of its functionality is listed below:
 
     url = CreateGetRequest(
       service_url,
-      version
-      featuretype
+      version,
+      featuretype,
       bbox,
       crs
       )
