@@ -109,11 +109,3 @@ class WebFeatureService:
 			_WriteToGML(self.DataReader,out)
 		else:
 			raise ValueError(f"Incorrect format => {format}")
-
-if __name__ == "__main__":
-	wfs = WebFeatureService(r"https://service.pdok.nl/lv/bag/wfs/v2_0?request=getCapabilities&service=WFS")
-	print(wfs)
-	# print(wfs.typenames)
-	# print(wfs.Contraints)
-	wfs.RequestData("bag:pand", (110000,451000,111000,452000), 28992)
-	print(wfs.DataReader.LayerMeta.LinkTable)
