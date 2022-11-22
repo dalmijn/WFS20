@@ -1,5 +1,9 @@
+# General
 .idea
 *.png
+
+# Uploading
+.pypirc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
