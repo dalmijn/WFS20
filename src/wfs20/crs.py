@@ -51,7 +51,10 @@ class CRS:
 			self.auth = s[-1].split(".")[0].upper()
 			self.code = s[-1].split("#")[-1]
 
-		self.order = _OrderFromDB(self.code)[2]
+		try:
+			self.order = _OrderFromDB(self.code)[2]
+		except IndexError:
+			self.order = "xy"
 
 	def __repr__(self):
 		return f"<wfs20.crs.CRS object ({self.auth}:{self.code})>"
