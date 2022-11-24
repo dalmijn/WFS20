@@ -196,4 +196,3 @@ def CreatePostRequest(
 		elem.StartIndex(startindex)
 
 	return base, elem.ToString()
-
