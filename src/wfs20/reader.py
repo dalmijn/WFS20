@@ -16,6 +16,12 @@ class DataReader:
 	----------
 	url: str
 		request url for geospatial data
+	keyword: str
+		Designation of the requested layer
+	method: str
+		Request method, either 'GET' or 'POST'
+	data: str
+		Params in xml format
 
 	Returns
 	-------
