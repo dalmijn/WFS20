@@ -1,54 +1,20 @@
+from wfs20 import __path__
 from wfs20.error import WFSError
-from wfs20.request import GetResponse
+from wfs20.io.util import execute_read_query
 
-import json
-import warnings
+import sqlite3
 
-try:
-	from osgeo.osr import SpatialReference
-except ModuleNotFoundError:
-	warnings.warn("osgeo package not installed. Creating CRS class will be slower",ImportWarning)
-
-def _OrderFromOSR(code):
-	srs = SpatialReference()
-	srs.ImportFromEPSG(int(code))
-	if srs.GetAxisOrientation(None,0) == 3:
-		order = "xy"
-	else:
-		order = "yx"
-	srs = None
-	return order
-
-def _OrderFromURL(code):
-	url = f"http://epsg.io/{code}.json"
-	try:
-		r = GetResponse(url, timeout=30)
-		status_code = None
-	except WFSError as e:
-		r = None
-		status_code = e.code
-	finally:
-		if r:
-			crs_json =  json.loads(r.text)
-			axis = crs_json["coordinate_system"]["axis"]
-			if any(["east" in item.lower() for item in axis[0].values()]):
-				order = "xy"
-			else:
-				order = "yx"
-		else:
-			order = "xy"
-	crs_json = None
-	axis = None
-	if status_code == 404:
-		raise WFSError("CRS not found", status_code, f"code: {code}")
-	return order
-
-def _axisorder(code):
-	try:
-		order = _OrderFromOSR(code)
-	except ModuleNotFoundError:
-		order = _OrderFromURL(code)
-	return order
+def _OrderFromDB(code):
+	"""
+	Get the order out of the database by EPSG code
+	"""
+	conn = sqlite3.connect(f"{__path__[0]}\\data\\axisorder.db")
+	search_query = f"""\
+SELECT * FROM axisorder WHERE code = '{code}';
+"""
+	r = execute_read_query(conn, search_query)
+	conn.close()
+	return r[0]
 
 class CRS:
 	"""
@@ -85,7 +51,7 @@ class CRS:
 			self.auth = s[-1].split(".")[0].upper()
 			self.code = s[-1].split("#")[-1]
 
-		self.order = _axisorder(self.code)
+		self.order = _OrderFromDB(self.code)[2]
 
 	def __repr__(self):
 		return f"<wfs20.crs.CRS object ({self.auth}:{self.code})>"
