@@ -6,7 +6,7 @@ from lxml import etree
 WFS_NAMESPACE = 'http://www.opengis.net/wfs/2.0'
 OWS_NAMESPACE = 'http://www.opengis.net/ows/1.1'
 OGC_NAMESPACE = 'http://www.opengis.net/ogc'
-GML_NAMESPACE = 'http://www.opengis.net/gml'
+GML_NAMESPACE = 'http://www.opengis.net/gml/3.2'
 FES_NAMESPACE = 'http://www.opengis.net/fes/2.0'
 XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance'
 
@@ -97,6 +97,51 @@ def _IsFieldType(lst):
 	if str in lst:
 		type = str
 	return type
+
+class _PostElement(etree.ElementBase):
+	"""
+	"""
+	def __init__(self,ns,sub):
+		# Supercharge the ElementBase class
+		super(_PostElement,self).__init__(nsmap={"ns0":ns})
+		self.tag = _ElementKey(ns, sub)
+		self.set("service","WFS")
+		self.set("version","2.0.0")
+		self._query = etree.SubElement(self,_ElementKey(GML_NAMESPACE, "Query"))
+
+	def FeatureType(self,featuretype):
+		"""
+		Set the featuretype
+		"""
+		self._query.set("typenames",featuretype)
+
+	def BBOXPost(self,bbox,crs):
+		"""
+		Set the bbox for the post request
+		"""
+		# Nested part
+		f_elem = etree.SubElement(self._query, _ElementKey(FES_NAMESPACE, "Filter")) 
+		bb_elem = etree.SubElement(f_elem, _ElementKey(FES_NAMESPACE, "BBOX"))
+		c_elem = etree.SubElement(bb_elem, _ElementKey(GML_NAMESPACE, "Envelope"))
+		# Filling it in
+		c_elem.set("srsName",crs.GetURNCode())
+		# Setting the bounding box coordinates
+		ll = etree.SubElement(c_elem, _ElementKey(GML_NAMESPACE, "LowerCorner"))
+		ll.text = f"{bbox[0]} {bbox[1]}"
+		ur = etree.SubElement(c_elem, _ElementKey(GML_NAMESPACE, "UpperCorner"))
+		ur.text = f"{bbox[2]} {bbox[3]}"
+
+	def StartIndex(si):
+		"""
+		Set the starting index of the request
+		"""
+		self.set("startindex",str(si))
+
+	def ToString(self):
+		"""
+		Return the data in xml format for the post request
+		"""
+		return etree.tostring(self)
 
 class FeatureTypeMeta:
 	"""
@@ -246,3 +291,19 @@ class LayerMeta:
 			return self
 		else:
 			raise TypeError(f"unsupported operand type(s) for |=: '{self.__class__}' and '{other.__class__}'")
+
+if __name__ == "__main__":
+	from wfs20.request import CreatePostRequest, GetResponse
+	crs = CRS.from_epsg(28992)
+	base, data = CreatePostRequest(
+		r"https://service.pdok.nl/lv/bag/wfs/v2_0?request=getCapabilities&service=WFS", 
+		"2.0.0",
+		"bag:pand",
+		(110000,451000,111000,452000), 
+		crs
+		)
+	r = GetResponse(base, 30, method="POST", data=data)
+	class aap:
+		pass
+	_BuildResonseMeta(aap, r, "pand")
+	print(aap.Features[0].Fields)

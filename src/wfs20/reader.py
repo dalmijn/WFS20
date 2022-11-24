@@ -24,14 +24,19 @@ class DataReader:
 	def __init__(
 		self,
 		url,
+		keyword,
+		method="GET",
+		data=None
 		):
 
 		# General stuff
-		self.DataURL = url
-		self.Keyword = dict(parse_qsl(self.DataURL))["typenames"].split(":")[1]
+		self.URL = url
+		self.Keyword = keyword
+		self.RequestMethod = method
+		self.RequestData = data
 
 		# substance
-		_BuildResonseMeta(self, GetResponse(self.DataURL, timeout=30), self.Keyword)
+		_BuildResonseMeta(self, GetResponse(self.URL, timeout=30, method=method, data=data), self.Keyword)
 
 	def __repr__(self):
 		return super().__repr__()

@@ -1,4 +1,5 @@
 from wfs20.error import WFSError
+from wfs20.util import _PostElement, WFS_NAMESPACE
 
 import sys
 import requests
@@ -29,7 +30,7 @@ def _ServiceURL(url,version):
 	urlpar = urlencode(par)
 	return "?".join([url.split("?")[0],urlpar])
 
-def GetResponse(url,timeout):
+def GetResponse(url,timeout,method="GET",data=None):
 	"""
 	Get the response from a url to be requested
 
@@ -39,6 +40,10 @@ def GetResponse(url,timeout):
 		url to be requested
 	timeout: int
 		Allowed timeout after which an Exception is raised
+	method: str
+		Request method, either 'GET' or 'POST'
+	data: str
+		Parameters in xml format
 
 	Returns
 	-------
@@ -47,7 +52,10 @@ def GetResponse(url,timeout):
 	params = {}
 	params["timeout"] = timeout
 
-	r = requests.request("GET",url,**params)
+	if data is not None:
+		params["data"] = data
+
+	r = requests.request(method,url,**params)
 
 	if r.status_code in range(400,451,1):
 		raise WFSError("Client Error", r.status_code, r.text)
@@ -109,7 +117,7 @@ def CreateGetRequest(
 	startindex=None
 	):
 	"""
-	Create a geospatial data request-url
+	Create a geospatial data get request-url
 
 	Parameters
 	----------
@@ -145,8 +153,47 @@ def CreateGetRequest(
 	return f"{base}?{p}"
 
 # ToDo: Fix post requests for this library
-def CreatePostRequest():
+def CreatePostRequest(
+	url,
+	version,
+	featuretype,
+	bbox,
+	crs,
+	startindex=None
+	):
 	"""
+	Generate post request-url & data
+
+	Parameters
+	----------
+	url: str
+		Service url
+	version: str
+		Service version
+	featuretype: str
+		Layer to be requested, mostly in the format of 'xxx:xxx'
+	bbox: list or tuple
+		Bounding box wherein the spatial data lies that is requested,
+		e.g. (x1,y1,x2,y2)
+	crs: wfs20.crs.CRS
+		Object containing projection information
+	startindex: int
+		Starting index of the feature count
+
+	Returns
+	-------
+	url: str
+		base url for the post request
+	data: str
+		Params in xml format for the post request
 	"""
-	return "This now does nothing, thanks for trying out"
+	base, _ = _BaseRequestURL(url)
+	elem = _PostElement(WFS_NAMESPACE, "GetFeature")
+	# set the data
+	elem.FeatureType(featuretype)
+	elem.BBOXPost(bbox, crs)
+	if startindex is not None:
+		elem.StartIndex(startindex)
+
+	return base, elem.ToString()
 
