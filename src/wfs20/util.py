@@ -9,16 +9,21 @@ OGC_NAMESPACE = 'http://www.opengis.net/ogc'
 GML_NAMESPACE = 'http://www.opengis.net/gml/3.2'
 FES_NAMESPACE = 'http://www.opengis.net/fes/2.0'
 XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance'
+XLI_NAMESPACE = 'http://www.w3.org/1999/xlink'
 
 def _BuildServiceMeta(wfs,r):
 	"""
 	Method to build the metadata etc. of the service itself
 	"""
-	t = etree.fromstring(r.content)
-	# Some indentifiers
-	# ToDo
+	t = etree.fromstring(r.content)	
 	# General Keywords
 	wfs.Keywords = [item.text for item in t.findall(_ElementKey(OWS_NAMESPACE, "Keywords/Keyword"))]
+	# Some service meta like allowed wfs versions etc
+	for elem in t.findall(_ElementKey(OWS_NAMESPACE,"OperationsMetadata/Operation")):
+		if elem.attrib["name"] == "GetCapabilities":
+			wfs.GetCapabilitiesMeta = GetCapabilitiesMeta(elem)
+		elif elem.attrib["name"] == "GetFeature":
+			wfs.GetFeatureMeta = GetFeatureMeta(elem)
 	# Featuretypes (Layers) and Featuretype Meta
 	wfs.FeatureTypeMeta = {}
 	for elem in t.findall(_ElementKey(WFS_NAMESPACE, "FeatureTypeList/FeatureType")):
@@ -42,6 +47,24 @@ def _BuildServiceMeta(wfs,r):
 			except Exception:
 				wfs.Constraints[elem.attrib["name"]] = None
 	t = None
+
+def _BuildContentMeta(obj,elem):
+	"""
+	"""
+	name = elem.attrib["name"]
+	# Links in the Operation content meta
+	obj.RequestMethods = {}
+	for e in elem.findall(_ElementKey(OWS_NAMESPACE, "DCP/HTTP/*")):
+		key = e.tag.replace(f"{{{OWS_NAMESPACE}}}","")
+		obj.RequestMethods.update({key:e.attrib[_ElementKey(XLI_NAMESPACE, "href")]})
+	# Parameters in the Operation content meta
+	for e in elem.findall(_ElementKey(OWS_NAMESPACE, "Parameter")):
+		key = e.attrib["name"]
+		setattr(obj, key, 
+			tuple(
+			[item.text for item in e.findall(_ElementKey(OWS_NAMESPACE, "AllowedValues/Value"))]
+			)
+		)
 
 def _BuildResonseMeta(reader, r, keyword):
 	"""
@@ -100,6 +123,7 @@ def _IsFieldType(lst):
 
 class _PostElement(etree.ElementBase):
 	"""
+	lxml.etree.Element to create post request data
 	"""
 	def __init__(self,ns,sub):
 		# Supercharge the ElementBase class
@@ -143,6 +167,20 @@ class _PostElement(etree.ElementBase):
 		"""
 		return etree.tostring(self)
 
+class GetCapabilitiesMeta:
+	def __init__(self,elem):
+		_BuildContentMeta(self, elem)
+
+	def __repr__(self):
+		return super().__repr__()
+
+class GetFeatureMeta:
+	def __init__(self,elem):
+		_BuildContentMeta(self, elem)
+
+	def __repr__(self):
+		return super().__repr__()
+
 class FeatureTypeMeta:
 	"""
 	Create metadata of a featuretype
@@ -161,6 +199,7 @@ class FeatureTypeMeta:
 		# Identifiers
 		self.FeatureType = elem.find(_ElementKey(WFS_NAMESPACE, "Name")).text
 		self.Title = elem.find(_ElementKey(WFS_NAMESPACE, "Title")).text
+		self.Abstract = elem.find(_ElementKey(WFS_NAMESPACE, "Abstract")).text
 		# Bounding Box
 		self.BBOX84 = None
 		bbox = elem.find(_ElementKey(OWS_NAMESPACE, "WGS84BoundingBox"))
@@ -293,17 +332,11 @@ class LayerMeta:
 			raise TypeError(f"unsupported operand type(s) for |=: '{self.__class__}' and '{other.__class__}'")
 
 if __name__ == "__main__":
-	from wfs20.request import CreatePostRequest, GetResponse
-	crs = CRS.from_epsg(28992)
-	base, data = CreatePostRequest(
-		r"https://service.pdok.nl/lv/bag/wfs/v2_0?request=getCapabilities&service=WFS", 
-		"2.0.0",
-		"bag:pand",
-		(110000,451000,111000,452000), 
-		crs
-		)
-	r = GetResponse(base, 30, method="POST", data=data)
+	from wfs20.request import CreatePostRequest, GetResponse, _ServiceURL
+	url = _ServiceURL(r"https://service.pdok.nl/lv/bag/wfs/v2_0?request=getCapabilities&service=WFS", "2.0.0")
+	print(url)
+	r = GetResponse(url, 30)
 	class aap:
 		pass
-	_BuildResonseMeta(aap, r, "pand")
-	print(aap.Features[0].Fields)
+	_BuildServiceMeta(aap, r)
+	print(aap.GetCapabilitiesMeta.AcceptVersions)
