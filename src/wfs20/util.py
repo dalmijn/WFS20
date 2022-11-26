@@ -56,7 +56,7 @@ def _BuildContentMeta(obj,elem):
 	obj.RequestMethods = {}
 	for e in elem.findall(_ElementKey(OWS_NAMESPACE, "DCP/HTTP/*")):
 		key = e.tag.replace(f"{{{OWS_NAMESPACE}}}","")
-		obj.RequestMethods.update({key:e.attrib[_ElementKey(XLI_NAMESPACE, "href")]})
+		obj.RequestMethods.update({key.upper():e.attrib[_ElementKey(XLI_NAMESPACE, "href")]})
 	# Parameters in the Operation content meta
 	for e in elem.findall(_ElementKey(OWS_NAMESPACE, "Parameter")):
 		key = e.attrib["name"]
@@ -330,13 +330,3 @@ class LayerMeta:
 			return self
 		else:
 			raise TypeError(f"unsupported operand type(s) for |=: '{self.__class__}' and '{other.__class__}'")
-
-if __name__ == "__main__":
-	from wfs20.request import CreatePostRequest, GetResponse, _ServiceURL
-	url = _ServiceURL(r"https://service.pdok.nl/lv/bag/wfs/v2_0?request=getCapabilities&service=WFS", "2.0.0")
-	print(url)
-	r = GetResponse(url, 30)
-	class aap:
-		pass
-	_BuildServiceMeta(aap, r)
-	print(aap.GetCapabilitiesMeta.AcceptVersions)
