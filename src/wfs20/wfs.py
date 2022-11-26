@@ -81,7 +81,7 @@ class WebFeatureService:
 				bbox,
 				crs
 				)
-		keyword = self.FeatureTypeMeta[featuretype].Abstract
+		keyword = self.FeatureTypeMeta[featuretype].Title
 		self.DataReader = DataReader(url,keyword)
 		return self.DataReader
 
