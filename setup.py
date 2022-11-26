@@ -59,4 +59,7 @@ setup(
 	"lxml"
 	],
 	python_requires='>=3.6',
+	package_data={
+	"wfs20": ["data\\axisorder.db"],
+	}
 	)
