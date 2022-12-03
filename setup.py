@@ -7,7 +7,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
 	name="wfs20",
-	version="0.1.2",
+	version="0.2.0b1",
 	description="Small library to request geospatial data (WFS)",
 	long_description=long_description,
 	long_description_content_type="text/markdown",
@@ -59,4 +59,7 @@ setup(
 	"lxml"
 	],
 	python_requires='>=3.6',
+	package_data={
+	"wfs20": ["data\\axisorder.db"],
+	}
 	)

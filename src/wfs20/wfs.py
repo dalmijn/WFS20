@@ -81,7 +81,8 @@ class WebFeatureService:
 				bbox,
 				crs
 				)
-		self.DataReader = DataReader(url)
+		keyword = self.FeatureTypeMeta[featuretype].Title
+		self.DataReader = DataReader(url,keyword)
 		return self.DataReader
 
 	def ToFile(
