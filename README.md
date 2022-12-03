@@ -24,8 +24,17 @@ Some of its functionality is listed below:
   - Get the capabilities and metadata of/from the service
 
     ```sh
+    # service
     from wfs20 import WebFeatureService
-    wfs = WebFeatureService(<url>)
+    wfs = WebFeatureService(url)
+
+    # metadata
+    wfs.Constraints -> dict
+    wfs.FeatureTypes -> tuple
+    wfs.FeatureTypeMeta -> object
+    wfs.GetCapabilitiesMeta -> object
+    wfs.GetFeatureMeta -> object
+    wfs.Keywords -> tuple
     ```
 
   - Request geospatial data from the service
@@ -62,7 +71,7 @@ Some of its functionality is listed below:
     from wfs20.reader import DataReader
     from wfs20.request import CreateGetRequest
 
-    crs = CRS.from_epsg(<epsg>)
+    crs = CRS.from_epsg(epsg)
 
     url = CreateGetRequest(
       service_url,
@@ -72,10 +81,29 @@ Some of its functionality is listed below:
       crs
       )
 
-    reader = DataReader(<url>)
+    reader = DataReader(url,keyword)
     ```
-
+    keyword is in general the Title of the featuretype, e.g. 'bag:pand' -> keyword is 'pand'
     Where again you have a reader object holding the geospatial data
+
+  - Both GET and POST requests are supported, though wfs20.RequestData only supports GET request
+    url and POST request data can however be implemented in the DataReader
+
+  ```sh
+  from wfs20.request import CreatePostRequest
+
+  url,data = CreatePostRequest(
+    url,
+    version,
+    featuretype,
+    bbox,
+    crs
+    )
+
+  reader = DataReader(url,keyword,method="POST",data=data)
+  ```
+
+  Again one would have a reader object holding the acquired geospatial data.
 
 ## Dependencies
   - [lxml: Parse xml-data returned by the service, whether it be the service itself or the requested data]
