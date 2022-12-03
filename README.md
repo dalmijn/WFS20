@@ -89,19 +89,19 @@ Some of its functionality is listed below:
   - Both GET and POST requests are supported, though wfs20.RequestData only supports GET request
     url and POST request data can however be implemented in the DataReader
 
-  ```sh
-  from wfs20.request import CreatePostRequest
+    ```sh
+    from wfs20.request import CreatePostRequest
 
-  url,data = CreatePostRequest(
-    url,
-    version,
-    featuretype,
-    bbox,
-    crs
-    )
+    url,data = CreatePostRequest(
+      url,
+      version,
+      featuretype,
+      bbox,
+      crs
+      )
 
-  reader = DataReader(url,keyword,method="POST",data=data)
-  ```
+    reader = DataReader(url,keyword,method="POST",data=data)
+    ```
 
   Again one would have a reader object holding the acquired geospatial data.
 
