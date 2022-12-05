@@ -51,5 +51,6 @@ class DataReader:
 		if isinstance(self, other.__class__):
 			self.Features += other.Features
 			self.LayerMeta |= other.LayerMeta
+			return self
 		else:
 			raise TypeError(f"unsupported operand type(s) for +=: '{self.__class__}' and '{other.__class__}'")
