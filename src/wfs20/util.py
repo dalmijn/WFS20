@@ -17,7 +17,7 @@ def _BuildServiceMeta(wfs,r):
 	"""
 	t = etree.fromstring(r.content)	
 	# General Keywords
-	wfs.Keywords = [item.text for item in t.findall(_ElementKey(OWS_NAMESPACE, "Keywords/Keyword"))]
+	wfs.Keywords = [item.text for item in t.findall(_ElementKey(OWS_NAMESPACE, "ServiceIdentification/Keywords/Keyword"))]
 	# Some service meta like allowed wfs versions etc
 	for elem in t.findall(_ElementKey(OWS_NAMESPACE,"OperationsMetadata/Operation")):
 		if elem.attrib["name"] == "GetCapabilities":
