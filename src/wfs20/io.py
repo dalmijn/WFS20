@@ -1,10 +1,17 @@
-from wfs20.error import WFSError
+from wfs20.error import WFSInternalError
 from pathlib import Path
 
 import warnings
 import importlib.util
 
 GDAL_INSTALLED = False
+
+_SUPPORTED_DRIVERS = {
+	"ESRI Shapefile": ".shp",
+	"GeoJSON": ".geojson",
+	"GML": ".gml",
+	"netCDF": ".nc",
+}
 
 try:
 	from osgeo import ogr, osr
@@ -21,17 +28,35 @@ def _WriteGeometries(
 	reader,
 	driver: str,
 	out: str,
-	):
+):
+	"""Write the geometries to harddrive
+
+	Parameters
+	----------
+	reader : 'wfs20.reader.DataReader'
+		A DataReader object containing geospatial data
+	driver : str
+		ogr driver (e.g. 'GeoJSON')
+	out : str
+		output directory
+
+	Raises
+	------
+	ModuleNotFoundError
+		_description_
 	"""
-	"""
+
 	if not importlib.util.find_spec("osgeo"):
 		raise ModuleNotFoundError("Cannot execute function as osgeo is not installed.")
-	Driver = ogr.GetDriverByName('ESRI Shapefile')
+	if not driver in _SUPPORTED_DRIVERS:
+		raise WFSInternalError("Driver not found", f"'{driver}' not in list of available drivers for wfs20")
+	Driver = ogr.GetDriverByName(driver)
+	_ext = _SUPPORTED_DRIVERS[driver]
 
 	srs = osr.SpatialReference()
 	srs.ImportFromEPSG(28992)
 
-	dst = Driver.CreateDataSource(Path(out,f'{reader.Keyword}.shp'))
+	dst = Driver.CreateDataSource(str(Path(out,f'{reader.Keyword}{_ext}')))
 	Layer = dst.CreateLayer(reader.Keyword,srs)
 
 	# Create Fields of Layer
