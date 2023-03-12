@@ -4,6 +4,7 @@ from wfs20.io import GDAL_INSTALLED
 import os
 import sys
 import sqlite3
+from pathlib import Path
 
 if GDAL_INSTALLED:
 	from osgeo import osr
@@ -40,13 +41,14 @@ def execute_read_query(conn, query):
     cur.close()
 
 def _CreateAxisOrderDBASE():
+	"""Create the axisorder database via the proj.db used by GDAL
 	"""
-	"""
+    
 	# Some locations
 	pyloc = os.path.dirname(sys.executable)
 	# database connections
-	proj = sqlite3.connect(f"{pyloc}\\Lib\\site-packages\\osgeo\\data\\proj\\proj.db")
-	conn = sqlite3.connect(f"{__path__[0]}\\data\\axisorder.db")
+	proj = sqlite3.connect(Path(pyloc,"Lib\\site-packages\\osgeo\\data\\proj\\proj.db"))
+	conn = sqlite3.connect(Path(__path__[0],"data\\axisorder.db"))
 	# set cursor
 	proj_cur = proj.cursor()
 	create_table = """\

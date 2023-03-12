@@ -12,9 +12,9 @@ XSI_NAMESPACE = 'http://www.w3.org/2001/XMLSchema-instance'
 XLI_NAMESPACE = 'http://www.w3.org/1999/xlink'
 
 def _BuildServiceMeta(wfs,r):
+	"""Method to build the metadata etc. of the service itself
 	"""
-	Method to build the metadata etc. of the service itself
-	"""
+
 	t = etree.fromstring(r.content)	
 	# General Keywords
 	wfs.Keywords = [item.text for item in t.findall(_ElementKey(OWS_NAMESPACE, "ServiceIdentification/Keywords/Keyword"))]
@@ -49,8 +49,9 @@ def _BuildServiceMeta(wfs,r):
 	t = None
 
 def _BuildContentMeta(obj,elem):
+	"""Method to build the content metadata
 	"""
-	"""
+
 	name = elem.attrib["name"]
 	# Links in the Operation content meta
 	obj.RequestMethods = {}
@@ -67,9 +68,9 @@ def _BuildContentMeta(obj,elem):
 		)
 
 def _BuildResonseMeta(reader, r, keyword):
+	"""Method to build the metadata etc. of the geospatial data request
 	"""
-	Method to build the metadata etc. of the geospatial data request
-	"""
+
 	t = etree.fromstring(r.content)
 	# Generate Local NameSpace
 	_GetLocalNS(t.nsmap)
@@ -84,9 +85,9 @@ def _BuildResonseMeta(reader, r, keyword):
 	t = None
 
 def _GetLocalNS(nsmap):
+	"""Local Namespace of the GetCapabilities and GetFeature Response
 	"""
-	Local Namespace of the GetCapabilities and GetFeature Response
-	"""
+
 	global LOC_NAMESPACE
 	nb = ["w3.org","opengis.net"]
 	b_list = [all([item not in master for item in nb]) for master in list(nsmap.values())]
@@ -96,9 +97,9 @@ def _GetLocalNS(nsmap):
 		LOC_NAMESPACE = ""
 
 def _ElementKey(ns,sub):
+	"""Return key in xml format
 	"""
-	Return key in xml format
-	"""
+
 	def ns_string(ns,s):
 		return f"{{{ns}}}{s}"
 	subs = sub.split("/")
@@ -122,10 +123,10 @@ def _IsFieldType(lst):
 	return type
 
 class _PostElement(etree.ElementBase):
-	"""
-	lxml.etree.Element to create post request data
-	"""
 	def __init__(self,ns,sub):
+		"""lxml.etree.Element to create post request data
+		"""
+
 		# Supercharge the ElementBase class
 		super(_PostElement,self).__init__(nsmap={"ns0":ns})
 		self.tag = _ElementKey(ns, sub)
@@ -134,15 +135,15 @@ class _PostElement(etree.ElementBase):
 		self._query = etree.SubElement(self,_ElementKey(GML_NAMESPACE, "Query"))
 
 	def FeatureType(self,featuretype):
+		"""Set the featuretype
 		"""
-		Set the featuretype
-		"""
+
 		self._query.set("typenames",featuretype)
 
 	def BBOXPost(self,bbox,crs):
+		"""Set the bbox for the post request
 		"""
-		Set the bbox for the post request
-		"""
+
 		# Nested part
 		f_elem = etree.SubElement(self._query, _ElementKey(FES_NAMESPACE, "Filter")) 
 		bb_elem = etree.SubElement(f_elem, _ElementKey(FES_NAMESPACE, "BBOX"))
@@ -155,16 +156,16 @@ class _PostElement(etree.ElementBase):
 		ur = etree.SubElement(c_elem, _ElementKey(GML_NAMESPACE, "UpperCorner"))
 		ur.text = f"{bbox[2]} {bbox[3]}"
 
-	def StartIndex(si):
+	def StartIndex(self, si):
+		"""Set the starting index of the request
 		"""
-		Set the starting index of the request
-		"""
+
 		self.set("startindex",str(si))
 
 	def ToString(self):
+		"""Return the data in xml format for the post request
 		"""
-		Return the data in xml format for the post request
-		"""
+		
 		return etree.tostring(self)
 
 class GetCapabilitiesMeta:
@@ -182,20 +183,20 @@ class GetFeatureMeta:
 		return super().__repr__()
 
 class FeatureTypeMeta:
-	"""
-	Create metadata of a featuretype
-
-	Parameters
-	----------
-	elem: lxml.etree._Element
-		Data corresponding to the featuretype in xml format
-		parsed by lxml.etree
-
-	Returns
-	-------
-	FeatureType metadata object
-	"""
 	def __init__(self,elem):
+		"""Create metadata of a featuretype
+
+		Parameters
+		----------
+		elem : lxml.etree._Element
+			Data corresponding to the featuretype in xml format
+			parsed by lxml.etree
+
+		Returns
+		-------
+		FeatureType metadata object
+		"""
+
 		# Identifiers
 		self.FeatureType = elem.find(_ElementKey(WFS_NAMESPACE, "Name")).text
 		self.Title = elem.find(_ElementKey(WFS_NAMESPACE, "Title")).text
@@ -228,20 +229,20 @@ class FeatureTypeMeta:
 			self.MetaDataURLs.append(url.attrib["{http://www.w3.org/1999/xlink}href"])
 
 class Feature:
-	"""
-	Holds data of individual features returned by the request
-	for geospatial data
-
-	Parameters
-	----------
-	elem: lxml.etree._Element
-		Data corresponding to the feature
-
-	Returns
-	-------
-	Feature Object
-	"""
 	def __init__(self,elem):
+		"""Holds data of individual features returned by the request
+		for geospatial data
+
+		Parameters
+		----------
+		elem: lxml.etree._Element
+			Data corresponding to the feature
+
+		Returns
+		-------
+		Feature Object
+		"""
+
 		self.Fields = {}
 		for e in elem.findall(_ElementKey(LOC_NAMESPACE, "*")):
 			if e.text and e.text.strip():
@@ -254,17 +255,17 @@ class Feature:
 		return super().__repr__()
 
 class LayerMeta:
-	"""
-	Metadata for a shapefile layer based on gml data
-
-	Parameters
-	----------
-	t: lxml.etree._Element
-		gml data parsed by lxml.etree
-	keyword: str
-		string associated with feature dependent values
-	"""
 	def __init__(self,t,keyword):
+		"""Metadata for a shapefile layer based on gml data
+
+		Parameters
+		----------
+		t: lxml.etree._Element
+			gml data parsed by lxml.etree
+		keyword: str
+			string associated with feature dependent values
+		"""
+
 		# Headers
 		self.FieldHeaders = set(
 			(item.tag.replace(f"{{{LOC_NAMESPACE}}}","") 
@@ -330,3 +331,4 @@ class LayerMeta:
 			return self
 		else:
 			raise TypeError(f"unsupported operand type(s) for |=: '{self.__class__}' and '{other.__class__}'")
+		

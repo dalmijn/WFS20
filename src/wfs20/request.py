@@ -7,18 +7,18 @@ from lxml import etree
 from urllib.parse import parse_qsl, urlencode
 
 def _BaseRequestURL(url):
+	"""Separate the url in a base-url and parameters
 	"""
-	Separate the url in a base-url and parameters
-	"""
+	
 	par = []
 	if url.find("?") != -1:
 		par = parse_qsl(url.split("?")[1])
 	return url.split("?")[0],par
 
-def _ServiceURL(url,version):
+def _ServiceURL(url, version):
+	"""Ensure a suitable url for the service GetCapabilities request
 	"""
-	Ensure a suitable url for the service GetCapabilities request
-	"""
+
 	base,par = _BaseRequestURL(url)
 	key = [item[0] for item in par]
 	if "service" not in key:
@@ -30,25 +30,31 @@ def _ServiceURL(url,version):
 	urlpar = urlencode(par)
 	return "?".join([url.split("?")[0],urlpar])
 
-def GetResponse(url,timeout,method="GET",data=None):
-	"""
-	Get the response from a url to be requested
+def GetResponse(
+	url: str,
+	timeout: int,
+	method: str ="GET",
+	data: str=None,
+) -> requests.models.Response:
+	"""Get the response from a url to be requested
 
 	Parameters
 	----------
-	url: str
+	url : str
 		url to be requested
-	timeout: int
+	timeout : int
 		Allowed timeout after which an Exception is raised
-	method: str
+	method : str, optional
 		Request method, either 'GET' or 'POST'
-	data: str
+	data : str, optional
 		Parameters in xml format
 
 	Returns
 	-------
-	Response
+	requests.models.Response
+		object holding the response data
 	"""
+
 	params = {}
 	params["timeout"] = timeout
 
@@ -79,15 +85,13 @@ def GetResponse(url,timeout,method="GET",data=None):
 
 	return r
 
-def BBOXGet(bbox,crs):
+def BBOXGet(
+	bbox: tuple,
+	crs: int,
+) -> str:
+	"""Create string from bounding box tuple
 	"""
-	Translate a list or tuple of coordinates to request material
 
-	Parameters
-	----------
-	bbox: list of tuple
-	crs: wfs20.crs.CRS
-	"""
 	if crs.encoding == "urn":
 		if crs.order == "xy":
 			return "{},{},{},{},{}".format(
@@ -109,37 +113,37 @@ def BBOXGet(bbox,crs):
 			)
 
 def CreateGetRequest(
-	url,
-	version,
-	featuretype,
-	bbox,
-	crs,
-	startindex=None
-	):
-	"""
-	Create a geospatial data get request-url
+	url: str,
+	version: str,
+	featuretype: str,
+	bbox: tuple,
+	crs: 'wfs20.crs.CRS',
+	startindex: int=None,
+) -> str:
+	"""Create a geospatial data get request-url
 
 	Parameters
 	----------
-	url: str
+	url : str
 		Service url
-	version: str
+	version : str
 		Service version
-	featuretype: str
+	featuretype : str
 		Layer to be requested, mostly in the format of 'xxx:xxx'
-	bbox: list or tuple
+	bbox : tuple
 		Bounding box wherein the spatial data lies that is requested,
 		e.g. (x1,y1,x2,y2)
-	crs: wfs20.crs.CRS
+	crs : wfs20.crs.CRS
 		Object containing projection information
-	startindex: int
+	startindex : int, optional
 		Starting index of the feature count
 
 	Returns
 	-------
-	url: str
-		request url
+	str
+		get request url
 	"""
+
 	base,_ = _BaseRequestURL(url)
 	params = {
 		"service":"WFS","version":f"{version}",
@@ -154,39 +158,37 @@ def CreateGetRequest(
 
 # ToDo: Fix post requests for this library
 def CreatePostRequest(
-	url,
-	version,
-	featuretype,
-	bbox,
-	crs,
-	startindex=None
-	):
-	"""
-	Generate post request-url & data
+	url: str,
+	version: str,
+	featuretype: str,
+	bbox: tuple,
+	crs: 'wfs20.crs.CRS',
+	startindex: int=None,
+) -> tuple:
+	"""Generate post request-url & data
 
 	Parameters
 	----------
-	url: str
+	url : str
 		Service url
-	version: str
+	version : str
 		Service version
-	featuretype: str
+	featuretype : str
 		Layer to be requested, mostly in the format of 'xxx:xxx'
-	bbox: list or tuple
+	bbox : tuple
 		Bounding box wherein the spatial data lies that is requested,
 		e.g. (x1,y1,x2,y2)
-	crs: wfs20.crs.CRS
+	crs : wfs20.crs.CRS
 		Object containing projection information
-	startindex: int
+	startindex : int, optional
 		Starting index of the feature count
 
 	Returns
 	-------
-	url: str
-		base url for the post request
-	data: str
-		Params in xml format for the post request
+	tuple
+		Containing base url and the data in XML format
 	"""
+
 	base, _ = _BaseRequestURL(url)
 	elem = _PostElement(WFS_NAMESPACE, "GetFeature")
 	# set the data
