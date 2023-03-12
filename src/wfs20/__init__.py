@@ -7,5 +7,5 @@
 #
 #
 ##################################################
-from wfs20.version import __version__
-from wfs20.wfs import WebFeatureService
+from .version import __version__
+from .wfs import WebFeatureService
