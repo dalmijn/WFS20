@@ -1,0 +1,13 @@
+name: wfs20_test
+
+channels:
+  - conda-forge
+
+dependencies:
+  - build
+  - gdal>=3.1
+  - lxml
+  - pip
+  - python>=3.7
+  - requests
+  - setuptools>=61.0.0
