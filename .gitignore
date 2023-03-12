@@ -1,3 +1,9 @@
+# VS
+.vscode/
+
+# Documents
+.docs/
+
 # General
 .idea
 *.png
