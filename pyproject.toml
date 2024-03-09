@@ -12,6 +12,7 @@ include = ["wfs20"]
 [tool.setuptools.dynamic]
 version = {attr = "wfs20.version.__version__"}
 
+## Project related stuff
 [project]
 name = "wfs20"
 dynamic = ['version']
@@ -25,9 +26,9 @@ maintainers = [
 
 description = "Small library to request geospatial data (WFS)"
 readme = "README.md"
-license = {text = "BSD"}
+license = {text = "MIT"}
 
-requires-python = ">=3.7" 
+requires-python = ">=3.9" 
 dependencies = [
 "lxml",
 "requests",
@@ -50,7 +51,7 @@ classifiers = [
 'Topic :: Scientific/Engineering :: GIS',
 
 # Pick your license as you wish (should match "license" above)
-'License :: OSI Approved :: BSD License',
+'License :: OSI Approved :: MIT License',
 
 # Language
 'Natural Language :: English',
@@ -61,25 +62,99 @@ classifiers = [
 # Specify the Python versions you support here. In particular, ensure
 # that you indicate whether you support Python 2, Python 3 or both.
 'Programming Language :: Python :: 3',
-'Programming Language :: Python :: 3.7',
-'Programming Language :: Python :: 3.8',
 'Programming Language :: Python :: 3.9',
 'Programming Language :: Python :: 3.10',
+'Programming Language :: Python :: 3.11',
 ]
 
-[project.optional-dependencies] # Optional
+# Project's optional dependencies (development)
+[project.optional-dependencies]
+all = [
+    "setuptools>=61.0.0",
+]
 dev = [
-    "gdal>=3.1",
+    "pre-commit",
+    "ruff",
+    "wfs20[all, docs, io, test]",
+]
+docs = [
+    "jupyter",
+    "jupyter-cache",
+    "quartodoc",
+    "wfs20[all, io]",
+]
+io = [
+    "gdal>=3.5",
 ]
 test = [
-    "black",
 	"pytest>=2.7.3",
 	"pytest-cov",
     "pytest-mock",
 	"responses",
+    "wfs20[all, io]",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/B-Dalmijn/WFS20"
-"Source" =  "https://github.com/B-Dalmijn/WFS20"
-"Tracker" = "https://github.com/B-Dalmijn/WFS20/issues"
+"Homepage" = "https://github.com/dalmijn/WFS20"
+"Source" =  "https://github.com/dalmijn/WFS20"
+"Tracker" = "https://github.com/dalmijn/WFS20/issues"
+
+[tool.make_env]
+channels = ["conda-forge"]
+deps_not_in_conda = ["quartodoc"]
+
+## Some stuff for pytest and coverage
+[tool.pytest.ini_options]
+testpaths = [
+    "test",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["./src"]
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+    ]
+
+ignore_errors = true
+
+[tool.coverage.html]
+directory = ".cov"
+
+## Linting stuff
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.ruff]
+line-length = 88
+
+# enable pydocstyle (E), pyflake (F) and isort (I), pytest-style (PT)
+select = ["E", "F", "I", "PT", "D"]
+ignore-init-module-imports = true
+ignore = ["B904", "D105", "D211", "D213", "D301", "E712", "E741"]
+exclude = ["docs"]
+
+[tool.ruff.per-file-ignores]
+"test/**" = ["D103", "D100", "D104"]
+"test/conftest.py" = ["E402"]
+"src/wfs20/__init__.py" = ["E402", "F401", "F403"]
+
+[tool.ruff.pydocstyle]
+convention = "numpy"
