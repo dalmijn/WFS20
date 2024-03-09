@@ -1,7 +1,7 @@
 ##################################################
 # Author: B.W. Dalmijn
 # E-mail: brencodeert@outlook.com
-# License: BSD 3 license
+# License: MIT license
 #
 #
 #
