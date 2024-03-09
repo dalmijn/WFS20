@@ -1,6 +1,6 @@
 main = "0"
-major = "2"
-minor = "2"
-version = ""
+major = "3"
+minor = "0"
+version = ".dev"
 
 __version__ = f"{main}.{major}.{minor}{version}"
