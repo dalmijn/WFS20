@@ -27,3 +27,6 @@ tmp/
 build/
 dist/
 
+# Environment stuff
+environment.yml
+
