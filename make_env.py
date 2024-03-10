@@ -1,8 +1,6 @@
 """A simple script to generate enviroment.yml files from pyproject.toml."""
 
 import argparse
-import fnmatch
-import platform
 import re
 from pathlib import Path
 from sys import version_info

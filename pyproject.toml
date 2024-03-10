@@ -28,7 +28,7 @@ description = "Small library to request geospatial data (WFS)"
 readme = "README.md"
 license = {text = "MIT"}
 
-requires-python = ">=3.9" 
+requires-python = ">=3.9"
 dependencies = [
 "lxml",
 "requests",
@@ -99,6 +99,9 @@ test = [
 "Source" =  "https://github.com/dalmijn/WFS20"
 "Tracker" = "https://github.com/dalmijn/WFS20/issues"
 
+[project.scripts]
+wfs20 = "wfs20.cli:main"
+
 [tool.make_env]
 channels = ["conda-forge"]
 deps_not_in_conda = ["quartodoc"]
@@ -155,6 +158,7 @@ exclude = ["docs"]
 "test/**" = ["D103", "D100", "D104"]
 "test/conftest.py" = ["E402"]
 "src/wfs20/__init__.py" = ["E402", "F401", "F403"]
+"src/wfs20/cli.py" = ["D401"]
 
 [tool.ruff.pydocstyle]
 convention = "numpy"
