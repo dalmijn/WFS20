@@ -3,7 +3,7 @@
 ## What is it?
 wfs20 is a small library with the sole purpose of making it easy
 on the user to request geospatial data from a WebFeatureService.
-wfs20 only caters to the 2.0.0 version of the WebFeatureService 
+wfs20 only caters to the 2.0.0 version of the WebFeatureService
 for now. wfs20 will be expanded in the future to also contain the
 1.0.0 and 1.1.0 version of the WebFeatureService.
 
@@ -29,9 +29,9 @@ Some of its functionality is listed below:
   wfs = WebFeatureService(url)
 
   # metadata
-  wfs.Constraints 
-  wfs.FeatureTypes 
-  wfs.FeatureTypeMeta 
+  wfs.Constraints
+  wfs.FeatureTypes
+  wfs.FeatureTypeMeta
   wfs.GetCapabilitiesMeta
   wfs.GetFeatureMeta
   wfs.Keywords
@@ -45,10 +45,10 @@ Some of its functionality is listed below:
   # to be requested and the given bbox (x1,y1,x2,y2)
   ```
 
-    The returned reader object holds the geospatial data and 
+    The returned reader object holds the geospatial data and
     subsequent metadata
 
-  - Export the requested data to the harddrive, as long as there is 
+  - Export the requested data to the harddrive, as long as there is
     data in the reader object
 
   ```sh

@@ -1,3 +1,4 @@
+"""Versioning of WFS20."""
 main = "0"
 major = "3"
 minor = "0"
