@@ -1,9 +1,10 @@
 """CRS module."""
+
 import sqlite3
 from pathlib import Path
 
 from wfs20 import __path__
-from wfs20._dbase import execute_read_query
+from wfs20.util import execute_read_query
 
 
 def order_from_db(code):

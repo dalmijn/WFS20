@@ -1,4 +1,5 @@
 """Request stuff."""
+
 from urllib.parse import parse_qsl, urlencode
 
 import requests
@@ -6,7 +7,8 @@ from lxml import etree
 
 from wfs20.crs import CRS
 from wfs20.error import WFSError
-from wfs20.util import WFS_NAMESPACE, PostElement
+from wfs20.struct import PostElement
+from wfs20.util import WFS_NAMESPACE
 
 
 def base_url(url):

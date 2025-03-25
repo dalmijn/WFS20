@@ -1,4 +1,5 @@
 """Command-line interface for WFS20."""
+
 import argparse
 import sys
 from argparse import PARSER, Action, HelpFormatter, _MutuallyExclusiveGroup

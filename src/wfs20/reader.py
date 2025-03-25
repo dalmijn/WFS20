@@ -1,8 +1,9 @@
 """DataReader object."""
+
 import requests
 
+from wfs20.build import build_response_meta
 from wfs20.request import get_response
-from wfs20.util import build_response_meta
 
 
 def read_service(

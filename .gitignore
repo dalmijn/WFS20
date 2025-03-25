@@ -1,31 +1,123 @@
-# VS
+# Visual Studio
+.vs/
+
+# C++ compilation
+*.manifest
+!.build/gui/*.manifest
+src/bin/
+bin/
+
+# Visual Studio Code
 .vscode/
 
-# Documents
-.docs/
-
-# General
-.idea
-*.png
-
-# Uploading
-.pypirc
+# Geospatial temporary files
+*.aux.xml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*/__pycache__/
 *.py[cod]
-*.pyc
+*$py.class
 
-# Linking files
-*.egg-info/
-
-# Temperary files
+# Local documentation and temporary files (calculation etc.)
+.cov/
+.docs/
 tmp/
+whl/
 
-# Files from building
+# pixi environments
+.pixi
+*.egg-info
+
+# C extensions
+*.so
+
+# Pyinstaller files
+.build/fiat_build_time.py
+
+# Distribution / packaging
+.Python
 build/
+develop-eggs/
 dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+*.whl
+.installed.cfg
+*.egg
+MANIFEST
 
-# Environment stuff
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+.testdata/*
+!.testdata/.gitkeep
+!.testdata/create_test_data.py
+cover/
+
+# Scrapy stuff:
+.scrapy
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 environment.yml
+pixi-hook.rc
+**/shell-hook.*
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# example output data
+docs/examples/example_output
+docs/PDF_Documentation_files

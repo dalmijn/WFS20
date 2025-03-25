@@ -1,6 +1,7 @@
 """Versioning of WFS20."""
-main = "0"
-major = "3"
+
+main = "1"
+major = "0"
 minor = "0"
 version = ".dev"
 
