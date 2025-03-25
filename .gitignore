@@ -24,6 +24,10 @@ __pycache__/
 tmp/
 whl/
 
+# Axis order database location
+src/wfs20/data/*
+!src/wfs20/data/.gitkeep
+
 # pixi environments
 .pixi
 *.egg-info

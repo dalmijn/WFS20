@@ -5,6 +5,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import pyproj
 from pyproj.crs import CRS
 
 # 0,5,6 are hard to define.
@@ -27,6 +28,10 @@ def create_database():
     """Create the axisorder database via the proj.db used by GDAL."""
     # Some locations
     db_dir = os.environ.get("PROJ_DATA", os.environ.get("PROJ_LIB"))
+    pyproj_dir = Path(pyproj.__file__).parent
+    proj_dir = Path(pyproj_dir, "proj_dir", "share", "proj")
+    if Path(proj_dir, "proj.db").is_file():
+        db_dir = proj_dir
     if db_dir is None:
         raise ConnectionError("Proj database was not found.")
 
@@ -51,7 +56,6 @@ CREATE TABLE IF NOT EXISTS axisorder (
             srs = CRS.from_epsg(code[0])
             url = f"http://epsg.io/{code[0]}"
             direction = srs.axis_info[0].direction
-            sys.stdout.write(f"Direction is: {direction}\n")
             order = _OrienTable[direction]
             add_to_table = f"""\
 INSERT INTO
@@ -60,7 +64,6 @@ VALUES
       ("EPSG",{code[0]},'{order}','{url}')
 """
             execute_query(conn, add_to_table)
-            sys.stdout.write(f"Succesfully added EPSG:{code[0]}\n")
             # clean up the srs
             srs = None
     # close all connections and cursors

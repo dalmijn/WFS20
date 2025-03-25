@@ -3,7 +3,6 @@
 from wfs20.build import build_service_meta
 from wfs20.crs import CRS
 from wfs20.error import WFSInternalError
-from wfs20.io import write_vector_ogr
 from wfs20.reader import DataReader, read_service
 from wfs20.request import create_get_request, service_url
 
@@ -101,4 +100,3 @@ class WebFeatureService:
             raise WFSInternalError(
                 "Writing to file", "No features collected from WebFeatureService"
             )
-        write_vector_ogr(self.data_reader, driver, out)

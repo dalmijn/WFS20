@@ -4285,7 +4285,7 @@ packages:
 - pypi: .
   name: wfs20
   version: 1.0.0.dev0
-  sha256: 9264653d9b1bbff1861310a181bff6e1a7aec993ca58549fcb0df1d81bc71a0c
+  sha256: 62c50c1f66b4285af5cfc0806a27d9f1c50d20e429dba191177fa8f4de2eb608
   requires_dist:
   - lxml
   - requests
