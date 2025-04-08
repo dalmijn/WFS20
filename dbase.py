@@ -10,7 +10,16 @@ from pyproj.crs import CRS
 
 # 0,5,6 are hard to define.
 _OrienTable_old = {0: "xy", 1: "yx", 2: "yx", 3: "xy", 4: "xy", 5: "xy", 6: "xy"}
-_OrienTable = {"west": "xy", "east": "xy", "north": "yx", "south": "yx"}
+_OrienTable = {
+    "west": "xy",
+    "east": "xy",
+    "north": "yx",
+    "south": "yx",
+    "geocentricx": "xy",
+    "geocentricy": "yx",
+    "up": "xy",
+    "down": "xy",
+}
 
 
 def execute_query(conn, query):
@@ -56,7 +65,8 @@ CREATE TABLE IF NOT EXISTS axisorder (
             srs = CRS.from_epsg(code[0])
             url = f"http://epsg.io/{code[0]}"
             direction = srs.axis_info[0].direction
-            order = _OrienTable[direction]
+            sys.stdout.write(f"Adding epsg: {code[0]}\n")
+            order = _OrienTable[direction.lower()]
             add_to_table = f"""\
 INSERT INTO
       axisorder ('auth','code','order','reference')

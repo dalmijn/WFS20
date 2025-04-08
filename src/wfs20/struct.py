@@ -31,7 +31,10 @@ class FeatureTypeMeta:
     FeatureType metadata object
     """
 
-    def __init__(self, elem):
+    def __init__(
+        self,
+        elem: etree._Element,
+    ):
         # Identifiers
         self.feature_type = elem.find(element_key(WFS_NAMESPACE, "Name")).text
         self.title = elem.find(element_key(WFS_NAMESPACE, "Title")).text
@@ -88,7 +91,10 @@ class Feature:
     Feature
     """
 
-    def __init__(self, elem):
+    def __init__(
+        self,
+        elem: etree._Element,
+    ):
         self.fields = {}
         for e in elem.findall(element_key(util.LOC_NAMESPACE, "*")):
             if e.text and e.text.strip():
@@ -110,18 +116,22 @@ class LayerMeta:
 
     Parameters
     ----------
-    t: lxml.etree._Element
+    tree : lxml.etree._Element
         gml data parsed by lxml.etree
-    keyword: str
+    keyword : str
         string associated with feature dependent values
     """
 
-    def __init__(self, t, keyword):
+    def __init__(
+        self,
+        tree: etree._Element,
+        keyword: str,
+    ):
         # Headers
         self.field_headers = set(
             (
                 item.tag.replace(f"{{{util.LOC_NAMESPACE}}}", "")
-                for item in t.iter(element_key(util.LOC_NAMESPACE, "*"))
+                for item in tree.iter(element_key(util.LOC_NAMESPACE, "*"))
                 if item.text and not item.text.strip() == ""
             )
         )
@@ -136,7 +146,7 @@ class LayerMeta:
         self.field_types = {}
         for header in self.field_headers:
             type_list = tuple(
-                map(is_type, t.iter(element_key(util.LOC_NAMESPACE, header)))
+                map(is_type, tree.iter(element_key(util.LOC_NAMESPACE, header)))
             )
             self.field_types[header] = is_field_type(type_list)
         type_list = None

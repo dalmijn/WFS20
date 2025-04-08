@@ -69,7 +69,7 @@ def build_content_meta(obj, elem):
         key = e.attrib["name"]
         setattr(
             obj,
-            key,
+            key.lower(),
             tuple(
                 [
                     item.text
@@ -83,20 +83,20 @@ def build_content_meta(obj, elem):
 
 def build_response_meta(reader, r, keyword):
     """Build the metadata of geospatial data request."""
-    t = etree.fromstring(r.content)
+    tree = etree.fromstring(r.content)
     # Generate Local NameSpace
-    loc_namespace = get_localns(t.nsmap)
+    loc_namespace = get_localns(tree.nsmap)
     # Set the global variable
     util.LOC_NAMESPACE = loc_namespace
     # Some identifiers
     reader.gml = r.content
     # Get the requested feature xml's
     reader.features = []
-    for elem in t.iter(element_key(loc_namespace, keyword)):
+    for elem in tree.iter(element_key(loc_namespace, keyword)):
         reader.features.append(Feature(elem))
     # Get the Layer meta data
-    reader.layer_meta = LayerMeta(t, keyword)
-    t = None
+    reader.layer_meta = LayerMeta(tree, keyword)
+    tree = None
 
 
 class CapabilitiesMeta:
