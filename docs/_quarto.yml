@@ -1,0 +1,103 @@
+project:
+  type: website
+  output-dir: "_site"
+  render:
+    - "*.qmd"
+    - "*.ipynb"
+  post-render:
+    - "examples/clear_notebooks.py"
+
+filters:
+   - include-code-files
+   - interlinks
+
+interlinks:
+  sources:
+    python:
+      url: https://docs.python.org/3/
+    requests:
+      url: https://requests.readthedocs.io/en/latest/
+
+metadata-files:
+  - api/_sidebar.yml
+
+number-sections: false
+
+website:
+  title: "WFS20"
+  # favicon: _static/logo.png
+  search:
+    location: navbar
+    limit: 5
+    type: textbox
+  back-to-top-navigation: true
+  page-footer:
+    left: |
+      Made for fun!
+  navbar:
+    # logo: _static/logo.png
+    search: true
+    pinned: true
+    left:
+      - setup_guide/index.qmd
+      - user_guide/index.qmd
+      - api/index.qmd
+      - text: "Developments"
+        file: developments/index.qmd
+    right:
+      - icon: github
+        menu:
+          - text: Source Code
+            url:  https://github.com/dalmijn/WFS20
+          - text: Report an Issue
+            url:  https://github.com/dalmijn/WFS20/issues/new/choose
+      - text: Version
+        menu:
+          - text: empty
+
+  sidebar:
+    - title: "Setup guide"
+      collapse-level: 3
+      contents:
+        - setup_guide/index.qmd
+
+format:
+  html:
+    theme:
+      light: [pulse, _static/theme-light.scss]
+      dark: [pulse, _static/theme-dark.scss]
+    css: _static/styles.css
+    toc: true
+    toc-expand: false
+    page-layout: article
+    grid:
+      content-mode: standard
+    include-in-header:
+      - text: |
+          <script type="text/javascript" src="/_static/version.js"></script>
+
+execute:
+  freeze: auto
+  cache: true
+
+quartodoc:
+  parser: numpy
+  package: wfs20
+  title: API Reference
+  style: pkgdown
+  dir: api
+  render_interlinks: true
+  sidebar: api/_sidebar.yml
+  options:
+    include_imports: true
+    include_inherited: true
+
+  # Basics of WFS20
+  sections:
+    - title: Basics
+    - subtitle: Core
+      desc: Core components of WFS20.
+      package: wfs20
+      contents:
+        - name: WebFeatureService
+          children: separate

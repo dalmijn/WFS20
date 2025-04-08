@@ -1,0 +1,14 @@
+---
+title: "What's new?"
+---
+
+## Unreleased
+This contains the unreleased changes to WFS20.
+
+### Added
+
+### Changed
+
+### Deprecated
+
+### Documentation
